@@ -1,4 +1,4 @@
-package com.testv1
+package com.capteur.temperature
 
 import android.app.Application
 import com.facebook.react.PackageList
