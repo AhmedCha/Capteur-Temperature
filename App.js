@@ -143,7 +143,7 @@ const App = () => {
     <View style={styles.container}>
       {data.length > 0 ? (
         <View style={styles.container}>
-          <Text style={styles.title}>Last measured temperature :</Text>
+          <Text style={styles.title}>Dernière température mesurée :</Text>
           <Text style={styles.text}>Temps: {data[data.length - 1].timestamp}</Text>
           {tempConfig.length > 0 && (
             <Image
@@ -169,13 +169,13 @@ const App = () => {
           {selectedPoint && (
             <View /* style={styles.container} */>
               <Text style={styles.text}>
-                Selected Point: {selectedPoint.label} - {selectedPoint.value}°C
+              Point sélectionné : {selectedPoint.label} - {selectedPoint.value}°C
               </Text>
             </View>
           )}
         </View>
       ) : (
-        <Text style={styles.text}>Loading...</Text>
+        <Text style={styles.text}>Chargement...</Text>
       )}
     </View>
   );
