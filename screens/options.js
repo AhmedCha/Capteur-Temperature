@@ -9,7 +9,6 @@ const NumberInput = ({ value, onChange, min, max }) => {
   const styles = useDynamicStyles();
   const [inputValue, setInputValue] = useState(value !== null ? value : 0);
 
-  // Helper function to parse and sanitize input
   const parseValue = (val) => {
     const parsed = parseInt(val.toString().replace(/\s/g, ""));
     return isNaN(parsed) ? 0 : parsed;
@@ -33,7 +32,7 @@ const NumberInput = ({ value, onChange, min, max }) => {
 
   const handleChangeText = (text) => {
     const newValue = parseValue(text);
-    setInputValue(newValue); // Update internal state for display
+    setInputValue(newValue);
   };
 
   const handleBlur = () => {
@@ -41,11 +40,9 @@ const NumberInput = ({ value, onChange, min, max }) => {
     if (newValue >= min && newValue <= max) {
       onChange(newValue);
     } else {
-      // Reset to bounds if the value is invalid
       setInputValue(value);
     }
   };
-
 
   return (
     <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
@@ -66,6 +63,7 @@ const NumberInput = ({ value, onChange, min, max }) => {
   );
 };
 
+/* Main Function */
 function SettingsScreen() {
   const styles = useDynamicStyles();
   const [minTemp, setMinTemp] = useState(null);
@@ -92,13 +90,13 @@ function SettingsScreen() {
     updateFirebaseConfigData(minTemp, maxTemp, minColorTemp, maxColorTemp)
   }
 
-
+  /* Loading Screen */
   if (minTemp === null || maxTemp === null || minColorTemp === null || maxColorTemp === null) {
     return (
-			<View style={{ flex: 1 }}>
-				<LoadingScreen />
-			</View>
-		)
+      <View style={styles.LoadingContainer}>
+        <LoadingScreen />
+      </View>
+    )
   }
   return (
     <ScrollView style={[styles.contentContainer, paddingBottom = 20]}>
@@ -118,6 +116,7 @@ function SettingsScreen() {
           <Text style={styles.text}>Temperature maximale:</Text>
           <NumberInput value={maxTemp} onChange={changeMaxTemp} min={minTemp + 1} max={125} />
         </View>
+        {/* End Notifications Min/Max */}
 
         {/* Dashboard image color */}
         <View style={styles.container}>
@@ -135,13 +134,14 @@ function SettingsScreen() {
           <NumberInput value={maxColorTemp} onChange={changeMaxTempColor} min={minColorTemp + 1} max={125} />
         </View>
       </View>
-        <Button
-          onPress={handleUpdateData}
-          title="Sauvgarder"
-          color="#841584"
-        />
-      <View /*  */>
-      </View>
+      {/* End Dashboard image color */}
+
+      <Button
+        onPress={handleUpdateData}
+        title="Sauvgarder"
+        color="#841584"
+      />
+      <View style={{ paddingBottom: 40 }}></View>
     </ScrollView>
   );
 }

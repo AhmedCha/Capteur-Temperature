@@ -2,7 +2,6 @@ import React from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import useDynamicStyles from '../assets/styles/styles'
 
-
 function LoadingScreen() {
   const styles = useDynamicStyles();
 	return (

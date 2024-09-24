@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { ref, query, onValue, orderByKey, limitToLast, get, update } from 'firebase/database';
 import { database } from './firebase';
 
-// Fetch the stored averages from Firebase
+/* Fetch the stored averages from Firebase */
 export const fetchTemperatureAverages = async () => {
   const averagesRef = ref(database, "TemperatureAverages");
   const snapshot = await get(averagesRef);
@@ -13,6 +13,7 @@ export const fetchTemperatureAverages = async () => {
   return null;
 };
 
+/* Get the last 30 value from firebase (approximatly last 5 minutes) */
 export const useFetchLast30Values = () => {
   const [data, setData] = useState([]);
 
@@ -33,15 +34,15 @@ export const useFetchLast30Values = () => {
       }
     });
 
-    // Cleanup function to remove the listener when the component unmounts
     return () => unsubscribe();
 
   }, []);
 
-  return data; // Instead of returning an object, just return the data
+  return data;
 };
 
-const firebaseData = () => {
+/* Get the last value from firebase */
+export const fetchLastFirebaseData = () => {
 	const [lastTemp, setLastTemp] = useState(null);
 	const [lastTime, setLastTime] = useState(null);
 
@@ -52,7 +53,7 @@ const firebaseData = () => {
 		onValue(dataQuery, (snapshot) => {
 			if (snapshot.exists()) {
 				const data = snapshot.val();
-				const lastEntry = Object.values(data)[0]; // Get the last entry
+				const lastEntry = Object.values(data)[0];
 				const temperature = Number(lastEntry.temperature);
 
 				setLastTemp(!isNaN(temperature) ? temperature : 0); // Ensure temperature is a valid number
@@ -67,9 +68,9 @@ const firebaseData = () => {
 };
 
 
-//Load Config from Firebase
-const firebaseConfigData = () => {
-	const [tempConfig, setTempConfig] = useState([]); // Temperature configuration can be changed from Firebase directly
+/* Load Config from Firebase */
+export const firebaseConfigData = () => {
+	const [tempConfig, setTempConfig] = useState([]); 
 
 	useEffect(() => {
 		const firebaseRef = ref(database, 'TemperatureConfig')
@@ -88,8 +89,8 @@ const firebaseConfigData = () => {
 	return { tempConfig };
 };
 
-//Update Config to Firebase
-const updateFirebaseConfigData = async (minTemp, maxTemp, minColorTemp, maxColorTemp) => {
+/* Update Config to Firebase */
+export const updateFirebaseConfigData = async (minTemp, maxTemp, minColorTemp, maxColorTemp) => {
 	const firebaseRef = ref(database, 'TemperatureConfig');
 
 	try {
@@ -105,5 +106,3 @@ const updateFirebaseConfigData = async (minTemp, maxTemp, minColorTemp, maxColor
 		console.error('Error sending data:', error);
 	}
 };
-
-export { firebaseData, firebaseConfigData, updateFirebaseConfigData };

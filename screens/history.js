@@ -5,26 +5,18 @@ import { Picker } from '@react-native-picker/picker';
 import useDynamicStyles from '../assets/styles/styles'
 import LoadingScreen from './loading'
 import { Dimensions } from 'react-native';
-
 import { fetchTemperatureAverages, useFetchLast30Values } from '../app/firebaseData';
 
 const useChartConfig = () => {
-	// Get the current color scheme (light or dark)
 	const colorScheme = useColorScheme();
 	const isDarkMode = colorScheme === 'dark';
-
 	return {
 		backgroundGradientFrom: isDarkMode ? "#000000" : "#ffffff",
 		backgroundGradientFromOpacity: 0,
 		backgroundGradientTo: isDarkMode ? "#000000" : "#ffffff",
 		backgroundGradientToOpacity: 0,
-
-		// Color of labels changes depending on dark/light mode
 		color: () => isDarkMode ? `rgb(255, 255, 255)` : `rgb(0, 0, 0)`,
-
-		// Other chart configurations
 		strokeWidth: 1,
-
 		propsForBackgroundLines: {
 			strokeDasharray: "", // Removes dashed lines
 		},
@@ -34,43 +26,41 @@ const useChartConfig = () => {
 	};
 };
 
+/* Main Function */
 function HistoryScreen() {
 	const { width } = Dimensions.get('window');
-  const styles = useDynamicStyles();
+	const styles = useDynamicStyles();
 	const last30Values = useFetchLast30Values();
 	const [selectedValue, setSelectedValue] = useState("instantly");
-	//const { data, chartData } = firebaseData();
 	const [selectedPoint, setSelectedPoint] = useState(null);
 	const chartConfig = useChartConfig();
 
+	/* Initialise chart data */
 	const [chartData, setChartData] = useState({
 		labels: [],
 		datasets: [{
 			data: [],
 			strokeWidth: 2,
 		}],
-		//removed legend for visibility
-		//legend: ["Temperature"]
+		/* removed legend for visibility */
+		/* legend: ["Temperature"] */
 	});
 
 	const updateChartData = (data) => {
 		if (data && data.length > 0) {
-			// Extract new temperatures and timestamps from the provided data
 			const newTemperatures = data.map(item => parseFloat(item.temperature));
 			const newTimestamps = data.map(item => item.timestamp);
 
-			// Update the chart directly with the new data
 			setChartData({
-				labels: newTimestamps, // Use the new timestamps directly
+				labels: newTimestamps,
 				datasets: [{
-					data: newTemperatures, // Use the new temperatures directly
-					strokeWidth: 2, // Optional: adjust line thickness
+					data: newTemperatures,
+					strokeWidth: 2,
 				}],
 			});
 		}
 	};
 
-	//Read name... it explains everything, everything
 	const handleDataPointClick = (data) => {
 		const index = data.index;
 		const value = data.value;
@@ -83,17 +73,11 @@ function HistoryScreen() {
 	useEffect(() => {
 		const updateChart = async () => {
 			if (selectedValue === 'instantly') {
-				// Update chart instantly with the latest data
 				updateChartData(last30Values);
-			} else {
-				// Fetch temperature data only once and update chart with averages
+			}
+			else {
 				try {
-					//const data = await fetchTemperatureData(); // Fetch data once
-					console.log("up!!", selectedValue)
-					const averages = await fetchTemperatureAverages(); // Calculate or get cached averages
-
-					/* console.log("averages", averages); */
-
+					const averages = await fetchTemperatureAverages();
 					switch (selectedValue) {
 						case 'day':
 							updateChartData(averages.last24HourAverages);
@@ -113,15 +97,14 @@ function HistoryScreen() {
 			}
 		};
 
-		updateChart(); // Call the function
+		updateChart();
 
 	}, [last30Values, selectedValue]);
 
-
-
+	/* Loading Screen */
 	if (!chartData.datasets[0].data.length > 0) {
 		return (
-			<View style={{ flex: 1 }}>
+			<View style={styles.LoadingContainer}>
 				<LoadingScreen />
 			</View>
 		)
@@ -144,15 +127,15 @@ function HistoryScreen() {
 						<Picker.Item label="Dernier 30 jours" value="month" />
 					</Picker>
 				</View>
+				<View style={{ paddingBottom: 40 }}></View>
 				{/* end picker */}
-				<Text style={styles.title}>{selectedValue}</Text>
 				{chartData.datasets[0].data.length > 0 && ( //3 day bug...
 					<LineChart
 						data={chartData}
-						width={width-60}
+						width={width - 60}
 						height={256}
 						chartConfig={chartConfig}
-						//bezier //smoothens the line
+						//bezier /* smoothens the line, removed caus unnessessary */
 						fromZero
 						onDataPointClick={handleDataPointClick}
 					/>)}
@@ -164,7 +147,6 @@ function HistoryScreen() {
 					</View>
 				)}
 			</View>
-
 		</ScrollView>
 	);
 }
