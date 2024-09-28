@@ -122,7 +122,7 @@ function SettingsScreen() {
         <View style={styles.container}>
           <Text style={styles.title}>Customisation:</Text>
           <Text style={styles.fadedText}>
-            En changeant ces valeurs, vous déterminez la plage de températures que vous souhaitez représenter de bleu vert le rouge.
+            En modifiant ces valeurs, vous définissez la plage de températures que vous souhaitez représenter, allant du bleu au rouge.
           </Text>
         </View>
         <View style={[styles.container, { flexDirection: 'row', alignItems: 'center' }]}>
@@ -138,7 +138,7 @@ function SettingsScreen() {
 
       <Button
         onPress={handleUpdateData}
-        title="Sauvgarder"
+        title="Sauvegarder"
         color="#841584"
       />
       <View style={{ paddingBottom: 40 }}></View>
