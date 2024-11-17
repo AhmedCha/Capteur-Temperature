@@ -1,79 +1,118 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# Temperature Sensor Mobile App
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+This React Native mobile application displays real-time temperature data from sensors, stored in Firebase Realtime Database. The app fetches the data and provides a user-friendly interface to monitor temperature trends.
 
-## Step 1: Start the Metro Server
+## Features
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- **Real-Time Temperature Display**: Fetches live temperature data from Firebase.
+- **Historical Data Visualization**: Displays temperature trends over time.
+- **Firebase Integration**: Uses Firebase Realtime Database to retrieve sensor data.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Technologies
+
+- **React Native**: For building cross-platform mobile applications.
+- **Firebase Realtime Database**: For real-time data storage and retrieval.
+- **Node.js (optional)**: For backend processing or data manipulation if needed.
+
+---
+
+## Prerequisites
+
+- **Node.js**
+- **Yarn** or **npm** 
+- **React Native CLI** (for Android and iOS development)
+- **Android Studio** (for building the Android APK)
+
+## Firebase Setup
+
+1. Go to [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. Add a Firebase Realtime Database to the project and set up the structure to store temperature data.
+3. Enable Firebase authentication if needed (e.g., email/password, anonymous).
+
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
 
 ```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+git clone https://github.com/AhmedCha/Capteur-Temperature.git
+cd temperature-sensor-app
 ```
 
-## Step 2: Start your Application
+### 2. Install Dependencies
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
+Install all necessary dependencies using Yarn or npm:
 
 ```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+npm install
 ```
 
-### For iOS
+### 3. Configure Firebase
 
-```bash
-# using npm
-npm run ios
+In your project, create a `firebase.js` file in the root directory to store Firebase configuration settings:
 
-# OR using Yarn
-yarn ios
+```javascript
+// firebaseConfig.js
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  databaseURL: "YOUR_DATABASE_URL",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+export { database };
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Replace `"YOUR_API_KEY"`, `"YOUR_AUTH_DOMAIN"`, etc., with your Firebase project’s configuration values from Firebase Console.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+### 4. Run the App Locally
 
-## Step 3: Modifying your App
+To run the app on your local device or emulator:
 
-Now that you have successfully run the app, let's modify it.
+1. Start the Metro bundler:
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+   ```bash
+   npm start
+   ```
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+2. Then select one of the following:
 
-## Congratulations! :tada:
+- i - run on iOS
+- a - run on Android
 
-You've successfully run and modified your React Native App. :partying_face:
+Ensure you have an Android or IOS emulator running or an Android device connected via USB with developer mode enabled.
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## Building the Android APK
 
-# Troubleshooting
+To build the app for Android and generate an APK file:
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+1. Generate a keystore using `"keytool -genkey -v -keystore your_key_name.keystore -alias your_key_alias -keyalg RSA -keysize 2048 -validity 10000"`
+2. Place the generated keystore in `"/android/app"`
+3. Go to the root directory of the project.
+4. Run the following command to start the build process:
 
-# Learn More
+   ```bash
+   cd android
+   gradlew assembleRelease
+   ```
 
-To learn more about React Native, take a look at the following resources:
+5. Once the build is complete, you can find the APK at `android/app/build/outputs/apk/release/app-release.apk`.
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+6. To install the app:
+- Copy app-release.apk to your android device and install it.
+- Or connect to an android device with Debug mode enabled and run ```npm run android -- --mode="release"```
